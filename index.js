@@ -13,7 +13,7 @@ try {
         case "LaunchRequest":
             console.log('LAUNCH REQUEST');
             context.succeed(
-            generateResponse(buildSpeechletResponse('Miu is scared of Shumba', true),
+            generateResponse(buildSpeechletResponse('Welcome to, AHHHHH the price of bitcoin is falling. Should I tell you when bitcoin drops by 1000?', true),
             {}));
             break;
     // > Intent Request
@@ -70,4 +70,3 @@ generateResponse = (speechletResponse, sessionAttributes) => {
         response: speechletResponse
     };
 };
-
