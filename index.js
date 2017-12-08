@@ -1,23 +1,13 @@
 /*global generateResponse */
 /*global buildSpeechletResponse */
-
-
-
-/*global json_decode*/
-/*global file_get_contents*/
-
-
+var https = require('https');
 exports.handler = (event, context) => {
-    // TODO implement
     //New Session
 try {
     
     if (event.session.new) {
         console.log("New Session");
         }    
-//var url = "https://btc-e.com/api/2/btc_usd/ticker";
-//var json = json_decode(file_get_contents(url), true);
-//var price = json["ticker"]["last"];
     switch (event.request.type) {
     // > Launch Request
         case "LaunchRequest":
@@ -29,16 +19,39 @@ try {
     // > Intent Request
         case "IntentRequest":
             console.log('INTENT REQUEST');
+            switch(event.request.intent.name){
+                case "GetCurrentValue":
+                var endpoint = "https://api.coindesk.com/v1/bpi/currentprice.json";
+                var body = "";
+                https.get(endpoint, (response) => {
+                    response.on('data', (chunk) => {body += chunk});
+                    response.on('end', () => {
+                        var data = JSON.parse(body);
+                        var currentBTCprice = data.bpi.USD.rate_float;
+                        context.succeed(
+                            generateResponse(
+                                buildSpeechletResponse(`Amir, Current bitcoin price is ${currentBTCprice}`, true),
+                                {}
+                                )
+                            );
+                        });
+                    });
+            break;
+            default:
+            throw "Invalid intent";
+            }
             break;
     // > Session Ended Request
         case "SessionEndedRequest": 
             console.log('SESSION ENDED REQUEST');
             break;
         default:
-            context.fail('INVALED REQUEST TYPE ${event.request.type}');
+            context.fail(`INVALED REQUEST TYPE ${event.request.type}`);
         }
-    }catch(error) {context.fail('Exception: ${error}')}
+    }catch(error) {context.fail(`Exception: ${error}`)}
 };
+
+
 
 //helper
 buildSpeechletResponse = (outputText, shouldEndSession) => {
@@ -57,3 +70,4 @@ generateResponse = (speechletResponse, sessionAttributes) => {
         response: speechletResponse
     };
 };
+
