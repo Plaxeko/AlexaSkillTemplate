@@ -30,7 +30,7 @@ try {
                         var currentBTCprice = data.bpi.USD.rate_float;
                         context.succeed(
                             generateResponse(
-                                buildSpeechletResponse(`Amir, Current bitcoin price is ${currentBTCprice}`, true),
+                                buildSpeechletResponse(`The Current bitcoin price is ${currentBTCprice}`, true),
                                 {}
                                 )
                             );
