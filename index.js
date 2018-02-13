@@ -1,5 +1,6 @@
 /*global generateResponse */
 /*global buildSpeechletResponse */
+
 var https = require('https');
 exports.handler = (event, context) => {
     //New Session
@@ -13,7 +14,7 @@ try {
         case "LaunchRequest":
             console.log('LAUNCH REQUEST');
             context.succeed(
-            generateResponse(buildSpeechletResponse('Welcome to, AHHHHH the price of bitcoin is falling. Should I tell you when bitcoin drops by 1000?', true),
+            generateResponse(buildSpeechletResponse('Ask me what the price of bitcoin is right now!', false),
             {}));
             break;
     // > Intent Request
@@ -30,12 +31,13 @@ try {
                         var currentBTCprice = data.bpi.USD.rate_float;
                         context.succeed(
                             generateResponse(
-                                buildSpeechletResponse(`The Current bitcoin price is ${currentBTCprice}`, true),
+                                buildSpeechletResponse(`The Current bitcoin price is ${currentBTCprice.toFixed(2)} USD`, true),
                                 {}
                                 )
                             );
                         });
                     });
+                    
             break;
             default:
             throw "Invalid intent";
